@@ -128,8 +128,9 @@ sections = load_kb()
 # =========================================================
 
 def retrieve_knowledge(question):
-
-    question_lower = question.lower()
+     question = str(question).strip()
+     question_lower = question.lower()
+    
 
 
     # -----------------------------------------------------
@@ -560,12 +561,9 @@ with st.chat_message(
     st.markdown(user_question)
 
 
-# -----------------------------------------------------
-# RETRIEVE KNOWLEDGE
-# -----------------------------------------------------
 
 relevant_knowledge = retrieve_knowledge(
-    user_question
+    str(user_question)
 )
 
 
