@@ -97,11 +97,12 @@ sections = load_kb()
 def retrieve_knowledge(question):
 
     stop_words = {
-        "what", "is", "are", "the", "a", "an", "in", "of",
-        "to", "for", "and", "or", "how", "why", "can", "do",
-        "does", "explain", "tell", "me", "about", "give",
-        "show", "please", "with", "example", "java"
-    }
+    "what", "is", "are", "the", "a", "an", "in", "of",
+    "to", "for", "and", "or", "how", "why", "can", "do",
+    "does", "explain", "tell", "me", "about", "give",
+    "show", "please", "with", "example", "java",
+    "keyword"
+}
 
     # Convert question into useful words
     question_words = set(
