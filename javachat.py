@@ -433,16 +433,16 @@ class Dog extends Animal {
 # EXPLANATION
 # -----------------------------------------------------
 
-if (
-    "explain" in question_lower
-    or "how" in question_lower
-    or "why" in question_lower
-):
+    if (
+        "explain" in question_lower
+        or "how" in question_lower
+        or "why" in question_lower
+    ):
 
-    return (
-        "### Simple Explanation\n\n"
-        + knowledge
-    )
+        return (
+            "### Simple Explanation\n\n"
+            + knowledge
+        )
 
 
 # -----------------------------------------------------
