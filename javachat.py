@@ -421,12 +421,12 @@ class Dog extends Animal {
 # EXAMPLE
 # -----------------------------------------------------
 
-if "example" in question_lower:
+    if "example" in question_lower:
 
-    return (
-        "### Java Example\n\n"
-        + knowledge
-    )
+        return (
+            "### Java Example\n\n"
+            + knowledge
+        )
 
 
 # -----------------------------------------------------
