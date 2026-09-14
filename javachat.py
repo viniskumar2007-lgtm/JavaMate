@@ -133,9 +133,7 @@ def retrieve_knowledge(question):
     
 
 
-    # -----------------------------------------------------
-    # STATIC METHOD SPECIAL HANDLING
-    # -----------------------------------------------------
+    
 
     if "static" in question_lower:
 
