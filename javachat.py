@@ -96,9 +96,48 @@ sections = load_kb()
 
 def retrieve_knowledge(question):
 
+    # Words that usually do not help identify the Java topic
+    stop_words = {
+        "what",
+        "is",
+        "are",
+        "the",
+        "a",
+        "an",
+        "in",
+        "of",
+        "to",
+        "for",
+        "and",
+        "or",
+        "how",
+        "why",
+        "can",
+        "do",
+        "does",
+        "explain",
+        "tell",
+        "me",
+        "about",
+        "give",
+        "show",
+        "please",
+        "with",
+        "example"
+    }
+
+    # Convert question into useful words
     question_words = set(
-        re.findall(r'\b[a-zA-Z][a-zA-Z0-9]*\b', question.lower())
+        re.findall(
+            r'\b[a-zA-Z][a-zA-Z0-9]*\b',
+            question.lower()
+        )
     )
+
+    question_words = {
+        word for word in question_words
+        if word not in stop_words
+    }
 
     scored_sections = []
 
@@ -106,19 +145,7 @@ def retrieve_knowledge(question):
 
         section_lower = section.lower()
 
-        section_words = set(
-            re.findall(
-                r'\b[a-zA-Z][a-zA-Z0-9]*\b',
-                section_lower
-            )
-        )
-
-        # Count matching words between question and section
-        matches = question_words.intersection(section_words)
-
-        score = len(matches)
-
-        # Give extra importance to the section heading
+        # Get section heading
         heading = section.split("\n")[0].strip().lower()
 
         heading_words = set(
@@ -128,20 +155,105 @@ def retrieve_knowledge(question):
             )
         )
 
-        heading_matches = question_words.intersection(heading_words)
+        # Words in the section
+        section_words = set(
+            re.findall(
+                r'\b[a-zA-Z][a-zA-Z0-9]*\b',
+                section_lower
+            )
+        )
 
-        score += len(heading_matches) * 10
+        # Normal word matches
+        word_matches = question_words.intersection(section_words)
+
+        score = len(word_matches)
+
+        # Give strong priority to matching the heading
+        heading_matches = question_words.intersection(
+            heading_words
+        )
+
+        score += len(heading_matches) * 50
+
+        # Exact phrase match in heading
+        question_text = question.lower().strip()
+
+        if question_text in heading:
+            score += 100
+
+        # Special handling for common Java questions
+        if (
+            "class" in question_words
+            and heading == "class:"
+        ):
+            score += 150
+
+        if (
+            "object" in question_words
+            and heading == "object:"
+        ):
+            score += 150
+
+        if (
+            "constructor" in question_words
+            and heading == "constructor:"
+        ):
+            score += 150
+
+        if (
+            "inheritance" in question_words
+            and heading == "inheritance:"
+        ):
+            score += 150
+
+        if (
+            "overloading" in question_words
+            and heading == "method overloading:"
+        ):
+            score += 150
+
+        if (
+            "overriding" in question_words
+            and heading == "method overriding:"
+        ):
+            score += 150
+
+        if (
+            "encapsulation" in question_words
+            and heading == "encapsulation:"
+        ):
+            score += 150
+
+        if (
+            "interface" in question_words
+            and heading == "interface:"
+        ):
+            score += 150
+
+        if (
+            "exception" in question_words
+            and heading == "exception:"
+        ):
+            score += 150
+
+        if (
+            "thread" in question_words
+            and heading == "thread:"
+        ):
+            score += 150
 
         if score > 0:
-            scored_sections.append((score, section))
+            scored_sections.append(
+                (score, section)
+            )
 
-    # Highest relevance first
+    # Sort from most relevant to least relevant
     scored_sections.sort(
         key=lambda x: x[0],
         reverse=True
     )
 
-    # Take the best 2 relevant sections
+    # Take the best 2 sections
     top_sections = scored_sections[:2]
 
     knowledge = "\n\n".join(
