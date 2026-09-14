@@ -483,7 +483,8 @@ RULES:
 
 "Sorry, I don't have that information
 in my Java knowledge base."
-"""
+"""   
+            try:
                     response = client.models.generate_content(
                         model=MODEL,
                         contents=prompt
