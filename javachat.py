@@ -231,13 +231,14 @@ def retrieve_knowledge(question):
 def fallback_answer(knowledge, question):
 
     if not knowledge:
-
         return (
             "Sorry, I don't have that information "
             "in my Java knowledge base."
         )
 
     question_lower = question.lower()
+
+    # ---------------- DIFFERENCE / COMPARISON ----------------
 
     if (
         "difference" in question_lower
@@ -246,19 +247,28 @@ def fallback_answer(knowledge, question):
         or "between" in question_lower
     ):
 
-        return (
-            "Gemini AI is temporarily unavailable.\n\n"
-            "Here is the relevant information "
-            "from my Java knowledge base:\n\n"
-            + knowledge
-        )
+        if (
+            "overloading" in question_lower
+            and "overriding" in question_lower
+        ):
 
-    return (
-        "Gemini AI is temporarily unavailable.\n\n"
-        "Here is the relevant information "
-        "from my Java knowledge base:\n\n"
-        + knowledge
-    )
+            return """### Method Overloading vs Method Overriding
+
+| Method Overloading | Method Overriding |
+|---|---|
+| Multiple methods have the same name but different parameters. | A child class provides its own implementation of a parent class method. |
+
+### Simple Example
+
+**Overloading:**
+```java
+int add(int a, int b) {
+    return a + b;
+}
+
+double add(double a, double b) {
+    return a + b;
+}
 
 
 # ---------------- GEMINI CLIENT ----------------
