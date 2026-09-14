@@ -467,34 +467,34 @@ api_key=st.secrets["key"]
 
 with st.sidebar:
 
-st.markdown("### ☕ JavaMate")
+    st.markdown("### ☕ JavaMate")
 
-st.caption(
+    st.caption(
     "Java Programming Assistant"
-)
+    )
 
-st.divider()
+    st.divider()
 
-st.markdown("**Topics covered**")
-
-
-topics = [
-    "Syntax",
-    "OOP",
-    "Classes",
-    "Objects",
-    "Constructors",
-    "Inheritance",
-    "Polymorphism",
-    "Encapsulation",
-    "Abstraction",
-    "Interfaces",
-    "Exceptions",
-    "Threads"
-]
+    st.markdown("**Topics covered**")
 
 
-st.markdown(
+    topics = [
+        "Syntax",
+        "OOP",
+        "Classes",
+        "Objects",
+        "Constructors",
+        "Inheritance",
+        "Polymorphism",
+        "Encapsulation",
+        "Abstraction",
+        "Interfaces",
+        "Exceptions",
+        "Threads"
+    ]
+
+
+    st.markdown(
     "".join(
         f'<span class="topic-chip">{topic}</span>'
         for topic in topics
@@ -503,17 +503,17 @@ st.markdown(
 )
 
 
-st.divider()
+    st.divider()
 
 
-if st.button(
-    "🗑️ Clear chat",
-    use_container_width=True
-):
+    if st.button(
+        "🗑️ Clear chat",
+        use_container_width=True
+    ):
 
-    st.session_state.messages = []
+        st.session_state.messages = []
 
-    st.rerun()
+        st.rerun()
 #=========================================================
 #CHAT HISTORY
 #=========================================================
