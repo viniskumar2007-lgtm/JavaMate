@@ -96,34 +96,11 @@ sections = load_kb()
 
 def retrieve_knowledge(question):
 
-    # Words that usually do not help identify the Java topic
     stop_words = {
-        "what",
-        "is",
-        "are",
-        "the",
-        "a",
-        "an",
-        "in",
-        "of",
-        "to",
-        "for",
-        "and",
-        "or",
-        "how",
-        "why",
-        "can",
-        "do",
-        "does",
-        "explain",
-        "tell",
-        "me",
-        "about",
-        "give",
-        "show",
-        "please",
-        "with",
-        "example"
+        "what", "is", "are", "the", "a", "an", "in", "of",
+        "to", "for", "and", "or", "how", "why", "can", "do",
+        "does", "explain", "tell", "me", "about", "give",
+        "show", "please", "with", "example", "java"
     }
 
     # Convert question into useful words
@@ -145,7 +122,7 @@ def retrieve_knowledge(question):
 
         section_lower = section.lower()
 
-        # Get section heading
+        # First line is the section heading
         heading = section.split("\n")[0].strip().lower()
 
         heading_words = set(
@@ -155,7 +132,6 @@ def retrieve_knowledge(question):
             )
         )
 
-        # Words in the section
         section_words = set(
             re.findall(
                 r'\b[a-zA-Z][a-zA-Z0-9]*\b',
@@ -163,106 +139,45 @@ def retrieve_knowledge(question):
             )
         )
 
-        # Normal word matches
-        word_matches = question_words.intersection(section_words)
+        # Words matching anywhere in the section
+        body_matches = question_words.intersection(section_words)
 
-        score = len(word_matches)
+        score = len(body_matches)
 
-        # Give strong priority to matching the heading
-        heading_matches = question_words.intersection(
-            heading_words
-        )
+        # Words matching the heading are much more important
+        heading_matches = question_words.intersection(heading_words)
 
-        score += len(heading_matches) * 50
+        score += len(heading_matches) * 100
 
-        # Exact phrase match in heading
-        question_text = question.lower().strip()
-
-        if question_text in heading:
+        # Exact topic match in heading
+        if heading_matches:
             score += 100
 
-        # Special handling for common Java questions
-        if (
-            "class" in question_words
-            and heading == "class:"
-        ):
-            score += 150
-
-        if (
-            "object" in question_words
-            and heading == "object:"
-        ):
-            score += 150
-
-        if (
-            "constructor" in question_words
-            and heading == "constructor:"
-        ):
-            score += 150
-
-        if (
-            "inheritance" in question_words
-            and heading == "inheritance:"
-        ):
-            score += 150
-
-        if (
-            "overloading" in question_words
-            and heading == "method overloading:"
-        ):
-            score += 150
-
-        if (
-            "overriding" in question_words
-            and heading == "method overriding:"
-        ):
-            score += 150
-
-        if (
-            "encapsulation" in question_words
-            and heading == "encapsulation:"
-        ):
-            score += 150
-
-        if (
-            "interface" in question_words
-            and heading == "interface:"
-        ):
-            score += 150
-
-        if (
-            "exception" in question_words
-            and heading == "exception:"
-        ):
-            score += 150
-
-        if (
-            "thread" in question_words
-            and heading == "thread:"
-        ):
-            score += 150
-
         if score > 0:
-            scored_sections.append(
-                (score, section)
-            )
+            scored_sections.append((score, section))
 
-    # Sort from most relevant to least relevant
+    # Highest score first
     scored_sections.sort(
         key=lambda x: x[0],
         reverse=True
     )
 
-    # Take the best 2 sections
-    # If there is a strong topic match, return only the best section
-    if scored_sections and scored_sections[0][0] >= 100:
+    if not scored_sections:
+        return ""
+
+    # If the best section has a strong heading match,
+    # return only that section
+    if scored_sections[0][0] >= 200:
         knowledge = scored_sections[0][1]
+
     else:
+        # Otherwise return the best two relevant sections
         top_sections = scored_sections[:2]
 
         knowledge = "\n\n".join(
             section for score, section in top_sections
         )
+
     return knowledge[:6000]
 
 
