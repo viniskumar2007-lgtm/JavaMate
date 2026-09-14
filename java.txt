@@ -15,7 +15,6 @@ System.out.println("Hello World");
 The main() method is the starting point of a Java program.
 
 Printing in Java:
-
 System.out.println("Hello");
 System.out.print("Hello");
 
