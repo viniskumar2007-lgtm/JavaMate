@@ -239,13 +239,12 @@ def fallback_answer(knowledge, question):
 
     question_lower = question.lower()
 
-    # ---------------- DIFFERENCE / COMPARISON ----------------
-
+    # Difference between overloading and overriding
     if (
         "difference" in question_lower
         or "compare" in question_lower
-        or " vs " in question_lower
         or "between" in question_lower
+        or " vs " in question_lower
     ):
 
         if (
@@ -253,24 +252,42 @@ def fallback_answer(knowledge, question):
             and "overriding" in question_lower
         ):
 
-            return """### Method Overloading vs Method Overriding
+            return (
+                "### Method Overloading vs Method Overriding\n\n"
+                "| Method Overloading | Method Overriding |\n"
+                "|---|---|\n"
+                "| Same method name with different parameters. | Child class provides its own implementation of a parent method. |\n\n"
+                "### Method Overloading Example\n\n"
+                "```java\n"
+                "int add(int a, int b) {\n"
+                "    return a + b;\n"
+                "}\n\n"
+                "double add(double a, double b) {\n"
+                "    return a + b;\n"
+                "}\n"
+                "```\n\n"
+                "### Method Overriding Example\n\n"
+                "```java\n"
+                "class Animal {\n"
+                "    void sound() {\n"
+                '        System.out.println("Animal sound");\n'
+                "    }\n"
+                "}\n\n"
+                "class Dog extends Animal {\n"
+                "    @Override\n"
+                "    void sound() {\n"
+                '        System.out.println("Dog barks");\n'
+                "    }\n"
+                "}\n"
+                "```\n\n"
+                "This answer is based on my Java knowledge base."
+            )
 
-| Method Overloading | Method Overriding |
-|---|---|
-| Multiple methods have the same name but different parameters. | A child class provides its own implementation of a parent class method. |
-
-### Simple Example
-
-**Method Overloading:**
-
-```java
-int add(int a, int b) {
-    return a + b;
-}
-
-double add(double a, double b) {
-    return a + b;
-}
+    # Normal fallback
+    return (
+        "### JavaMate Knowledge Base Answer\n\n"
+        + knowledge
+    )
 
 
 # ---------------- GEMINI CLIENT ----------------
