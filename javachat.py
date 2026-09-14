@@ -449,10 +449,10 @@ class Dog extends Animal {
 # NORMAL ANSWER
 # -----------------------------------------------------
 
-return (
-    "### JavaMate Answer\n\n"
-    + knowledge
-)
+       return (
+        "### JavaMate Answer\n\n"
+        + knowledge
+    )
 #=========================================================
 
 #=========================================================
