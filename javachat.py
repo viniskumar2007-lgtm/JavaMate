@@ -128,203 +128,82 @@ sections = load_kb()
 # =========================================================
 
 def retrieve_knowledge(question):
-     question = str(question).strip()
-     question_lower = question.lower()
-    
 
+    question = str(question).strip()
+    question_lower = question.lower()
 
-    
-
-     if "static" in question_lower:
-
+    if "static" in question_lower:
         for section in sections:
-
-            heading = (
-                section
-                .split("\n")[0]
-                .strip()
-                .lower()
-            )
+            heading = section.split("\n", 1)[0].strip().lower()
 
             if (
                 "static method" in heading
                 or "static or class method" in heading
                 or heading == "static:"
             ):
-
                 return section[:6000]
 
-
-    # -----------------------------------------------------
-    # STOP WORDS
-    # -----------------------------------------------------
-
-     stop_words = {
-        "what",
-        "is",
-        "are",
-        "the",
-        "a",
-        "an",
-        "in",
-        "of",
-        "to",
-        "for",
-        "and",
-        "or",
-        "how",
-        "why",
-        "can",
-        "do",
-        "does",
-        "explain",
-        "tell",
-        "me",
-        "about",
-        "give",
-        "show",
-        "please",
-        "with",
-        "example",
-        "java",
-        "keyword"
+    stop_words = {
+        "what", "is", "are", "a", "an", "the",
+        "in", "of", "to", "for", "and", "or",
+        "how", "why", "with", "on", "by"
     }
-
-
-    # -----------------------------------------------------
-    # QUESTION WORDS
-    # -----------------------------------------------------
 
     question_words = set(
-        re.findall(
-            r'\b[a-zA-Z][a-zA-Z0-9]*\b',
+        word.lower()
+        for word in re.findall(
+            r"\b[a-zA-Z][a-zA-Z0-9]*\b",
             question_lower
         )
+        if word.lower() not in stop_words
     )
-
-    question_words = {
-        word
-        for word in question_words
-        if word not in stop_words
-    }
-
-
-    # -----------------------------------------------------
-    # SCORE SECTIONS
-    # -----------------------------------------------------
 
     scored_sections = []
 
-
     for section in sections:
 
-        section_lower = section.lower()
+        lines = section.split("\n")
 
+        if not lines:
+            continue
 
-        # First line = heading
+        heading = lines[0].strip().lower()
+        body = "\n".join(lines[1:]).lower()
 
-        heading = (
-            section
-            .split("\n")[0]
-            .strip()
-            .lower()
-        )
+        score = 0
 
+        for word in question_words:
 
-        # Words in heading
+            if word in body:
+                score += 1
 
-        heading_words = set(
-            re.findall(
-                r'\b[a-zA-Z][a-zA-Z0-9]*\b',
-                heading
-            )
-        )
-
-
-        # Words in entire section
-
-        section_words = set(
-            re.findall(
-                r'\b[a-zA-Z][a-zA-Z0-9]*\b',
-                section_lower
-            )
-        )
-
-
-        # Body matches
-
-        body_matches = (
-            question_words.intersection(
-                section_words
-            )
-        )
-
-
-        score = len(body_matches)
-
-
-        # Heading matches are more important
-
-        heading_matches = (
-            question_words.intersection(
-                heading_words
-            )
-        )
-
-
-        score += len(heading_matches) * 100
-
-
-        # Extra score for heading match
-
-        if heading_matches:
-            score += 100
-
+            if word in heading:
+                score += 100
 
         if score > 0:
-
             scored_sections.append(
                 (score, section)
             )
 
-
-    # -----------------------------------------------------
-    # SORT
-    # -----------------------------------------------------
-
-    scored_sections.sort(
-        key=lambda x: x[0],
-        reverse=True
-    )
-
-
-    # -----------------------------------------------------
-    # NO MATCH
-    # -----------------------------------------------------
-
     if not scored_sections:
         return ""
 
-
-    # -----------------------------------------------------
-    # SELECT KNOWLEDGE
-    # -----------------------------------------------------
+    scored_sections.sort(
+        key=lambda item: item[0],
+        reverse=True
+    )
 
     if scored_sections[0][0] >= 200:
+        return scored_sections[0][1][:6000]
 
-        knowledge = scored_sections[0][1]
+    top_sections = [
+        item[1]
+        for item in scored_sections[:2]
+    ]
 
-    else:
-
-        top_sections = scored_sections[:2]
-
-        knowledge = "\n\n".join(
-            section
-            for score, section in top_sections
-        )
-
-
-    return knowledge[:6000]
+    return "\n\n".join(
+        top_sections
+    )[:6000]
 
 
 # =========================================================
