@@ -254,14 +254,16 @@ def retrieve_knowledge(question):
     )
 
     # Take the best 2 sections
+    # If there is a strong topic match, return only the best section
+if scored_sections and scored_sections[0][0] >= 100:
+    knowledge = scored_sections[0][1]
+else:
     top_sections = scored_sections[:2]
 
     knowledge = "\n\n".join(
         section for score, section in top_sections
     )
-
-    # Keep Gemini input small
-    return knowledge[:6000]
+return knowledge[:6000]
 
 
 # ---------------- FALLBACK ----------------
