@@ -1,9 +1,9 @@
 import streamlit as st
 from google import genai
+import re
 
 # ---------------- CONFIG ----------------
 
-API_KEY = ""
 MODEL = "gemini-3.8-flash"
 KB_FILE = "java.txt"
 
@@ -71,66 +71,211 @@ st.markdown("""
 
 @st.cache_data
 def load_kb():
-    with open(KB_FILE, "r", encoding="utf-8") as f:
-        return f.read()
 
-kb = load_kb()
+    with open(KB_FILE, "r", encoding="utf-8") as f:
+        kb = f.read()
+
+    sections = re.split(
+        r'(?m)(?=^[A-Z][A-Z0-9\s-]+:$)',
+        kb
+    )
+
+    sections = [
+        section.strip()
+        for section in sections
+        if section.strip()
+    ]
+
+    return sections
+
+
+sections = load_kb()
+
+# ---------------- RETRIEVAL ----------------
+
+def retrieve_knowledge(question):
+
+    question = question.lower()
+
+    keywords = {
+        "inheritance": [
+            "inheritance",
+            "extends",
+            "parent class",
+            "child class"
+        ],
+
+        "overloading": [
+            "overloading",
+            "overload"
+        ],
+
+        "overriding": [
+            "overriding",
+            "override"
+        ],
+
+        "constructor": [
+            "constructor",
+            "constructors"
+        ],
+
+        "interface": [
+            "interface",
+            "interfaces"
+        ],
+
+        "abstract": [
+            "abstract",
+            "abstract class"
+        ],
+
+        "exception": [
+            "exception",
+            "exception handling",
+            "try",
+            "catch"
+        ],
+
+        "thread": [
+            "thread",
+            "threads"
+        ],
+
+        "synchronization": [
+            "synchronization",
+            "synchronized"
+        ],
+
+        "static": [
+            "static",
+            "static variable",
+            "static method"
+        ],
+
+        "encapsulation": [
+            "encapsulation",
+            "getter",
+            "setter"
+        ]
+    }
+
+    matched_topics = []
+
+    for topic, words in keywords.items():
+
+        for word in words:
+
+            if word in question:
+                matched_topics.append(topic)
+                break
+
+    scored_sections = []
+
+    for section in sections:
+
+        section_lower = section.lower()
+
+        heading = (
+            section.split("\n")[0]
+            .strip()
+            .lower()
+        )
+
+        score = 0
+
+        # Exact topic in heading gets highest priority
+        for topic in matched_topics:
+
+            if topic in heading:
+                score += 100
+
+        # Topic appears inside section
+        for topic in matched_topics:
+
+            if topic in section_lower:
+                score += 5
+
+        if score > 0:
+
+            scored_sections.append(
+                (score, section)
+            )
+
+    # Highest score first
+    scored_sections.sort(
+        key=lambda x: x[0],
+        reverse=True
+    )
+
+    # Multiple topics → retrieve multiple sections
+    if len(matched_topics) >= 2:
+
+        top_sections = scored_sections[:2]
+
+    else:
+
+        top_sections = scored_sections[:1]
+
+    knowledge = "\n\n".join(
+        section
+        for score, section in top_sections
+    )
+
+    # Prevent unnecessarily large prompts
+    return knowledge[:6000]
+
+
+# ---------------- FALLBACK ----------------
+
+def fallback_answer(knowledge, question):
+
+    if not knowledge:
+
+        return (
+            "Sorry, I don't have that information "
+            "in my Java knowledge base."
+        )
+
+    question_lower = question.lower()
+
+    if (
+        "difference" in question_lower
+        or "compare" in question_lower
+        or " vs " in question_lower
+        or "between" in question_lower
+    ):
+
+        return (
+            "Gemini AI is temporarily unavailable.\n\n"
+            "Here is the relevant information "
+            "from my Java knowledge base:\n\n"
+            + knowledge
+        )
+
+    return (
+        "Gemini AI is temporarily unavailable.\n\n"
+        "Here is the relevant information "
+        "from my Java knowledge base:\n\n"
+        + knowledge
+    )
+
 
 # ---------------- GEMINI CLIENT ----------------
 
-client = genai.Client(api_key=st.secrets["key"])
-
-# ---------------- PROMPT ----------------
-
-prompt = f"""
-You are JavaMate, a Java Programming Assistant chatbot.
-
-Your purpose is to help students learn Java programming.
-
-You can help with:
-
-- Java concepts
-- Java syntax
-- Java programs
-- OOP
-- Classes and Objects
-- Constructors
-- Inheritance
-- Polymorphism
-- Encapsulation
-- Abstraction
-- Interfaces
-- Exception Handling
-- Threads
-
-Use the following knowledge base:
-
----------------- KNOWLEDGE BASE ----------------
-
-{kb}
-
---------------------------------------------------
-
-Rules:
-
-1. Give simple and easy explanations.
-2. Give syntax when the user asks for syntax.
-3. Give Java code examples when requested.
-4. Explain code step by step when requested.
-5. Keep answers suitable for students.
-6. Use the knowledge base as the main source.
-7. Do not invent information.
-8. If the answer is not available in the knowledge base, say:
-
-"Sorry, I don't have that information in my Java knowledge base."
-"""
+client = genai.Client(
+    api_key=st.secrets["key"]
+)
 
 # ---------------- SIDEBAR ----------------
 
 with st.sidebar:
 
     st.markdown("### ☕ JavaMate")
-    st.caption("Java Programming Assistant")
+
+    st.caption(
+        "Java Programming Assistant"
+    )
 
     st.divider()
 
@@ -161,26 +306,40 @@ with st.sidebar:
 
     st.divider()
 
-    if st.button("🗑️ Clear chat", use_container_width=True):
+    if st.button(
+        "🗑️ Clear chat",
+        use_container_width=True
+    ):
+
         st.session_state.messages = []
+
         st.rerun()
+
 
 # ---------------- CHAT HISTORY ----------------
 
 if "messages" not in st.session_state:
+
     st.session_state.messages = []
 
-# Display old messages
 
 for message in st.session_state.messages:
 
-    avatar = "🧑‍💻" if message["role"] == "user" else "☕"
+    avatar = (
+        "🧑‍💻"
+        if message["role"] == "user"
+        else "☕"
+    )
 
     with st.chat_message(
         message["role"],
         avatar=avatar
     ):
-        st.markdown(message["content"])
+
+        st.markdown(
+            message["content"]
+        )
+
 
 # ---------------- USER INPUT ----------------
 
@@ -188,56 +347,106 @@ user_question = st.chat_input(
     "Ask a Java question..."
 )
 
+
 if user_question:
 
-    # Show user message
+    # Save user question
 
     st.session_state.messages.append({
         "role": "user",
         "content": user_question
     })
 
-    with st.chat_message("user", avatar="🧑‍💻"):
+    with st.chat_message(
+        "user",
+        avatar="🧑‍💻"
+    ):
+
         st.markdown(user_question)
 
-    # Create conversation history
+    # ---------------- RETRIEVE ----------------
 
-    history = ""
+    relevant_knowledge = retrieve_knowledge(
+        user_question
+    )
 
-    for message in st.session_state.messages:
+    # ---------------- GEMINI ----------------
 
-        history += (
-            f"{message['role'].upper()}: "
-            f"{message['content']}\n"
-        )
-
-    # Ask Gemini
-
-    with st.chat_message("assistant", avatar="☕"):
+    with st.chat_message(
+        "assistant",
+        avatar="☕"
+    ):
 
         with st.spinner("Thinking..."):
 
             try:
 
-                response = client.models.generate_content(
-                    model=MODEL,
-                    contents=prompt + """
+                if not relevant_knowledge:
 
-CONVERSATION:
-""" + history + """
+                    bot_reply = (
+                        "Sorry, I don't have that information "
+                        "in my Java knowledge base."
+                    )
 
-Answer the user's latest question.
+                else:
+
+                    prompt = f"""
+You are JavaMate, a Java Programming Assistant.
+
+Answer the student's question using ONLY
+the provided knowledge.
+
+KNOWLEDGE:
+{relevant_knowledge}
+
+STUDENT QUESTION:
+{user_question}
+
+RULES:
+
+1. Explain Java concepts in simple language.
+2. Give syntax when requested.
+3. Give Java code examples when requested.
+4. Explain code step by step when requested.
+5. Keep answers suitable for students.
+6. Do not invent information.
+7. Use only the provided knowledge.
+8. If the answer is not available, say:
+
+"Sorry, I don't have that information
+in my Java knowledge base."
 """
-                )
 
-                bot_reply = response.text
+                    response = client.models.generate_content(
+                        model=MODEL,
+                        contents=prompt
+                    )
+
+                    bot_reply = response.text
 
             except Exception as e:
 
-                bot_reply = (
-                    "Sorry, something went wrong.\n\n"
-                    + str(e)
-                )
+                error = str(e)
+
+                if "429" in error:
+
+                    bot_reply = fallback_answer(
+                        relevant_knowledge,
+                        user_question
+                    )
+
+                elif "503" in error:
+
+                    bot_reply = (
+                        "Gemini AI is temporarily busy.\n\n"
+                        "Please try again in a few moments."
+                    )
+
+                else:
+
+                    bot_reply = (
+                        "Sorry, something went wrong."
+                    )
 
         st.markdown(bot_reply)
 
