@@ -667,33 +667,33 @@ Give a clear, student-friendly answer.
     # ERROR HANDLING
     # -------------------------------------------------
 
-    except Exception as e:
-
-        error = str(e)
-
-        if "429" in error:
-
-            bot_reply = fallback_answer(
-                relevant_knowledge,
-                user_question
-            )
-
-        elif "503" in error:
-
-            bot_reply = fallback_answer(
-                relevant_knowledge,
-                user_question
-            )
-
-        else:
-
-            bot_reply = fallback_answer(
-                relevant_knowledge,
-                user_question
-            )
-
-# -----------------------------------------------------
-# DISPLAY BOT RESPONSE
-# -----------------------------------------------------
+        except Exception as e:
+    
+            error = str(e)
+    
+            if "429" in error:
+    
+                bot_reply = fallback_answer(
+                    relevant_knowledge,
+                    user_question
+                )
+    
+            elif "503" in error:
+    
+                bot_reply = fallback_answer(
+                    relevant_knowledge,
+                    user_question
+                )
+    
+            else:
+    
+                bot_reply = fallback_answer(
+                    relevant_knowledge,
+                    user_question
+                )
+    
+    # -----------------------------------------------------
+    # DISPLAY BOT RESPONSE
+    # -----------------------------------------------------
 
 st.markdown(bot_reply)
