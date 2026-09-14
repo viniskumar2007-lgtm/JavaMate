@@ -133,7 +133,7 @@ def retrieve_knowledge(question):
 
 
     # -----------------------------------------------------
-    # STATIC KEYWORD / STATIC METHOD
+    # STATIC METHOD SPECIAL HANDLING
     # -----------------------------------------------------
 
     if "static" in question_lower:
@@ -150,6 +150,7 @@ def retrieve_knowledge(question):
             if (
                 "static method" in heading
                 or "static or class method" in heading
+                or heading == "static:"
             ):
 
                 return section[:6000]
@@ -192,7 +193,7 @@ def retrieve_knowledge(question):
 
 
     # -----------------------------------------------------
-    # CONVERT QUESTION INTO USEFUL WORDS
+    # QUESTION WORDS
     # -----------------------------------------------------
 
     question_words = set(
@@ -201,7 +202,6 @@ def retrieve_knowledge(question):
             question_lower
         )
     )
-
 
     question_words = {
         word
@@ -222,7 +222,7 @@ def retrieve_knowledge(question):
         section_lower = section.lower()
 
 
-        # First line is the section heading
+        # First line = heading
 
         heading = (
             section
@@ -252,7 +252,7 @@ def retrieve_knowledge(question):
         )
 
 
-        # Words matching anywhere in section
+        # Body matches
 
         body_matches = (
             question_words.intersection(
@@ -264,7 +264,7 @@ def retrieve_knowledge(question):
         score = len(body_matches)
 
 
-        # Heading matches are much more important
+        # Heading matches are more important
 
         heading_matches = (
             question_words.intersection(
@@ -276,10 +276,9 @@ def retrieve_knowledge(question):
         score += len(heading_matches) * 100
 
 
-        # Exact topic match in heading
+        # Extra score for heading match
 
         if heading_matches:
-
             score += 100
 
 
@@ -291,7 +290,7 @@ def retrieve_knowledge(question):
 
 
     # -----------------------------------------------------
-    # SORT BY HIGHEST SCORE
+    # SORT
     # -----------------------------------------------------
 
     scored_sections.sort(
@@ -305,12 +304,11 @@ def retrieve_knowledge(question):
     # -----------------------------------------------------
 
     if not scored_sections:
-
         return ""
 
 
     # -----------------------------------------------------
-    # SELECT BEST KNOWLEDGE
+    # SELECT KNOWLEDGE
     # -----------------------------------------------------
 
     if scored_sections[0][0] >= 200:
@@ -348,7 +346,7 @@ def fallback_answer(knowledge, question):
 
 
     # -----------------------------------------------------
-    # METHOD OVERLOADING VS METHOD OVERRIDING
+    # METHOD OVERLOADING VS OVERRIDING
     # -----------------------------------------------------
 
     if (
@@ -385,138 +383,233 @@ class Calculator {
         return a + b;
     }
 }
+Example of Method Overriding
+class Animal {
+
+    void sound() {
+        System.out.println("Animal sound");
+    }
+}
+
+class Dog extends Animal {
+
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+"""
+
+# -----------------------------------------------------
+# PROGRAM / CODE / SYNTAX
+# -----------------------------------------------------
+
+if (
+    "program" in question_lower
+    or "code" in question_lower
+    or "syntax" in question_lower
+):
+
+    return (
+        "### Java Program / Syntax\n\n"
+        + knowledge
+    )
 
 
-# ---------------- GEMINI CLIENT ----------------
+# -----------------------------------------------------
+# EXAMPLE
+# -----------------------------------------------------
+
+if "example" in question_lower:
+
+    return (
+        "### Java Example\n\n"
+        + knowledge
+    )
+
+
+# -----------------------------------------------------
+# EXPLANATION
+# -----------------------------------------------------
+
+if (
+    "explain" in question_lower
+    or "how" in question_lower
+    or "why" in question_lower
+):
+
+    return (
+        "### Simple Explanation\n\n"
+        + knowledge
+    )
+
+
+# -----------------------------------------------------
+# NORMAL ANSWER
+# -----------------------------------------------------
+
+return (
+    "### JavaMate Answer\n\n"
+    + knowledge
+)
+=========================================================
+GEMINI CLIENT
+=========================================================
 
 client = genai.Client(
-    api_key=st.secrets["key"]
+api_key=st.secrets["key"]
 )
 
-# ---------------- SIDEBAR ----------------
+=========================================================
+SIDEBAR
+=========================================================
 
 with st.sidebar:
 
-    st.markdown("### ☕ JavaMate")
+st.markdown("### ☕ JavaMate")
 
-    st.caption(
-        "Java Programming Assistant"
-    )
+st.caption(
+    "Java Programming Assistant"
+)
 
-    st.divider()
+st.divider()
 
-    st.markdown("**Topics covered**")
-
-    topics = [
-        "Syntax",
-        "OOP",
-        "Classes",
-        "Objects",
-        "Constructors",
-        "Inheritance",
-        "Polymorphism",
-        "Encapsulation",
-        "Abstraction",
-        "Interfaces",
-        "Exceptions",
-        "Threads"
-    ]
-
-    st.markdown(
-        "".join(
-            f'<span class="topic-chip">{topic}</span>'
-            for topic in topics
-        ),
-        unsafe_allow_html=True
-    )
-
-    st.divider()
-
-    if st.button(
-        "🗑️ Clear chat",
-        use_container_width=True
-    ):
-
-        st.session_state.messages = []
-
-        st.rerun()
+st.markdown("**Topics covered**")
 
 
-# ---------------- CHAT HISTORY ----------------
-
-if "messages" not in st.session_state:
-
-    st.session_state.messages = []
-
-
-for message in st.session_state.messages:
-
-    avatar = (
-        "🧑‍💻"
-        if message["role"] == "user"
-        else "☕"
-    )
-
-    with st.chat_message(
-        message["role"],
-        avatar=avatar
-    ):
-
-        st.markdown(
-            message["content"]
-        )
+topics = [
+    "Syntax",
+    "OOP",
+    "Classes",
+    "Objects",
+    "Constructors",
+    "Inheritance",
+    "Polymorphism",
+    "Encapsulation",
+    "Abstraction",
+    "Interfaces",
+    "Exceptions",
+    "Threads"
+]
 
 
-# ---------------- USER INPUT ----------------
-
-user_question = st.chat_input(
-    "Ask a Java question..."
+st.markdown(
+    "".join(
+        f'<span class="topic-chip">{topic}</span>'
+        for topic in topics
+    ),
+    unsafe_allow_html=True
 )
 
 
+st.divider()
+
+
+if st.button(
+    "🗑️ Clear chat",
+    use_container_width=True
+):
+
+    st.session_state.messages = []
+
+    st.rerun()
+=========================================================
+CHAT HISTORY
+=========================================================
+
+if "messages" not in st.session_state:
+
+st.session_state.messages = []
+
+for message in st.session_state.messages:
+
+avatar = (
+    "🧑‍💻"
+    if message["role"] == "user"
+    else "☕"
+)
+
+
+with st.chat_message(
+    message["role"],
+    avatar=avatar
+):
+
+    st.markdown(
+        message["content"]
+    )
+=========================================================
+USER INPUT
+=========================================================
+
+user_question = st.chat_input(
+"Ask a Java question..."
+)
+
 if user_question:
 
-    # Save user question
+# -----------------------------------------------------
+# SAVE USER QUESTION
+# -----------------------------------------------------
 
-    st.session_state.messages.append({
-        "role": "user",
-        "content": user_question
-    })
+st.session_state.messages.append({
+    "role": "user",
+    "content": user_question
+})
 
-    with st.chat_message(
-        "user",
-        avatar="🧑‍💻"
-    ):
 
-        st.markdown(user_question)
+with st.chat_message(
+    "user",
+    avatar="🧑‍💻"
+):
 
-    # ---------------- RETRIEVE ----------------
+    st.markdown(user_question)
 
-    relevant_knowledge = retrieve_knowledge(
-        user_question
-    )
 
-    # ---------------- GEMINI ----------------
+# -----------------------------------------------------
+# RETRIEVE KNOWLEDGE
+# -----------------------------------------------------
 
-    with st.chat_message(
-        "assistant",
-        avatar="☕"
-    ):
+relevant_knowledge = retrieve_knowledge(
+    user_question
+)
 
-        with st.spinner("Thinking..."):
 
-            try:
+# -----------------------------------------------------
+# ASSISTANT RESPONSE
+# -----------------------------------------------------
 
-                if not relevant_knowledge:
+with st.chat_message(
+    "assistant",
+    avatar="☕"
+):
 
-                    bot_reply = (
-                        "Sorry, I don't have that information "
-                        "in my Java knowledge base."
-                    )
+    with st.spinner("Thinking..."):
 
-                else:
+        try:
 
-                    prompt = f"""
+
+            # -------------------------------------------------
+            # NO KNOWLEDGE
+            # -------------------------------------------------
+
+            if not relevant_knowledge:
+
+                bot_reply = (
+                    "Sorry, I don't have that information "
+                    "in my Java knowledge base."
+                )
+
+
+            # -------------------------------------------------
+            # GEMINI
+            # -------------------------------------------------
+
+            else:
+
+                prompt = f"""
+
 You are JavaMate, a Java Programming Assistant.
 
 Answer the student's question using ONLY the
@@ -530,83 +623,89 @@ STUDENT QUESTION:
 
 RULES:
 
-1. Explain the concept in simple English suitable for a college student.
-
-2. Start with a clear heading containing the topic name.
-
-3. Give a short definition first.
-
-4. If the knowledge base contains syntax, show the syntax.
-
-5. If the student asks for an example, provide a complete and
-easy-to-understand Java example using only information supported
-by the knowledge base.
-
-6. If you provide code, format it inside a Java code block.
-
-7. If the code has output that is supported by the example,
+Explain the concept in simple English suitable
+for a college student.
+Start with a clear heading containing the topic name.
+Give a short definition first.
+If the knowledge base contains syntax,
+show the syntax.
+If the student asks for an example, provide a
+complete and easy-to-understand Java example
+using only information supported by the knowledge base.
+If you provide code, format it inside a Java code block.
+If the code has output that is supported by the example,
 show the output separately.
-
-8. If the student asks for an explanation, explain the concept
-step by step.
-
-9. Use bullet points or tables when they make the answer easier
-to understand.
-
-10. Do not make the answer unnecessarily long.
-
-11. Do not invent information that is not present in the
-knowledge base.
-
-12. Use ONLY the provided knowledge.
-
-13. If the answer is not available in the knowledge base, say:
+If the student asks for an explanation,
+explain the concept step by step.
+Use bullet points or tables when they make
+the answer easier to understand.
+Do not make the answer unnecessarily long.
+Do not invent information that is not present
+in the knowledge base.
+Use ONLY the provided knowledge.
+If the answer is not available in the knowledge base,
+say exactly:
 
 "Sorry, I don't have that information in my Java knowledge base."
 
-14. Never mention internal retrieval, API errors, tokens,
-fallback systems, or the knowledge-base implementation.
+Never mention internal retrieval, API errors,
+tokens, fallback systems, or knowledge-base implementation.
 
 Give a clear, student-friendly answer.
 """
-            
-                    response = client.models.generate_content(
-                        model=MODEL,
-                        contents=prompt
-                    )
 
-                    bot_reply = response.text
+            response = client.models.generate_content(
+                model=MODEL,
+                contents=prompt
+            )
 
-            except Exception as e:
 
-                error = str(e)
+            bot_reply = response.text
 
-                if "429" in error:
 
-                    bot_reply = fallback_answer(
-                        relevant_knowledge,
-                        user_question
-                    )
+    # -------------------------------------------------
+    # ERROR HANDLING
+    # -------------------------------------------------
 
-                elif "503" in error:
+    except Exception as e:
 
-                    bot_reply = fallback_answer(
-                        relevant_knowledge,
-                        user_question
-                    )
+        error = str(e)
 
-                else:
 
-                    bot_reply = fallback_answer(
-                    relevant_knowledge,
-                    user_question
-                    )
+        if "429" in error:
 
-        st.markdown(bot_reply)
+            bot_reply = fallback_answer(
+                relevant_knowledge,
+                user_question
+            )
 
-    # Save bot response
 
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": bot_reply
-    })
+        elif "503" in error:
+
+            bot_reply = fallback_answer(
+                relevant_knowledge,
+                user_question
+            )
+
+
+        else:
+
+            bot_reply = fallback_answer(
+                relevant_knowledge,
+                user_question
+            )
+
+
+# -----------------------------------------------------
+# DISPLAY RESPONSE
+# -----------------------------------------------------
+
+st.markdown(bot_reply)
+-----------------------------------------------------
+SAVE BOT RESPONSE
+-----------------------------------------------------
+
+st.session_state.messages.append({
+"role": "assistant",
+"content": bot_reply
+})
