@@ -192,31 +192,31 @@ def retrieve_knowledge(question):
 
 # ---------------- FALLBACK ----------------
 
-def fallback_answer(knowledge, question):
+    def fallback_answer(knowledge, question):
 
-    if not knowledge:
-        return (
+        if not knowledge:
+            return (
             "Sorry, I don't have that information "
             "in my Java knowledge base."
         )
 
-    question_lower = question.lower()
+        question_lower = question.lower()
 
     # -----------------------------------
     # Difference / Comparison Questions
     # -----------------------------------
 
-    if (
-        "difference" in question_lower
-        or "compare" in question_lower
-        or "between" in question_lower
-        or " vs " in question_lower
-    ):
-
         if (
-            "overloading" in question_lower
-            and "overriding" in question_lower
+            "difference" in question_lower
+            or "compare" in question_lower
+            or "between" in question_lower
+            or " vs " in question_lower
         ):
+
+            if (
+                "overloading" in question_lower
+                and "overriding" in question_lower
+            ):
 
             return """
 ### Method Overloading vs Method Overriding
