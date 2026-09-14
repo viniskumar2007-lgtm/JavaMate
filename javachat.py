@@ -405,13 +405,13 @@ class Dog extends Animal {
 # PROGRAM / CODE / SYNTAX
 # -----------------------------------------------------
 
-if (
-    "program" in question_lower
-    or "code" in question_lower
-    or "syntax" in question_lower
-):
+    if (
+        "program" in question_lower
+        or "code" in question_lower
+        or "syntax" in question_lower
+    ):
 
-    return (
+return (
         "### Java Program / Syntax\n\n"
         + knowledge
     )
