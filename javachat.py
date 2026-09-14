@@ -219,7 +219,7 @@ def fallback_answer(knowledge, question):
             "in my Java knowledge base."
         )
 
-
+    question = str(question).strip()
     question_lower = question.lower()
 
 
