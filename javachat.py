@@ -135,7 +135,7 @@ def retrieve_knowledge(question):
 
     
 
-    if "static" in question_lower:
+     if "static" in question_lower:
 
         for section in sections:
 
