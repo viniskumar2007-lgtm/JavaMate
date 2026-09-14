@@ -1,0 +1,780 @@
+JAVA PROGRAMMING KNOWLEDGE BASE
+
+Java is a high-level, object-oriented, class-based programming language.
+
+Java programs are generally written inside classes.
+
+Basic Java Program Syntax:
+
+public class Main {
+public static void main(String[] args) {
+System.out.println("Hello World");
+}
+}
+
+The main() method is the starting point of a Java program.
+
+Printing in Java:
+
+System.out.println("Hello");
+System.out.print("Hello");
+
+Variables:
+
+int age = 20;
+double salary = 25000.50;
+char grade = 'A';
+boolean passed = true;
+String name = "Arun";
+
+Common Data Types:
+
+byte
+short
+int
+long
+float
+double
+char
+boolean
+String
+
+Taking User Input:
+
+import java.util.Scanner;
+
+Scanner sc = new Scanner(System.in);
+
+int age = sc.nextInt();
+String name = sc.nextLine();
+double mark = sc.nextDouble();
+
+Operators:
+
+Arithmetic operators:
+
+* * * /  %
+
+Relational operators:
+==  !=  >  <  >=  <=
+
+Logical operators:
+&&  ||  !
+
+Assignment operators:
+=  +=  -=  *=  /=
+
+Increment and decrement:
+++  --
+
+IF STATEMENT:
+
+if (age >= 18) {
+System.out.println("Adult");
+} else {
+System.out.println("Minor");
+}
+
+IF-ELSE-IF:
+
+if (mark >= 90) {
+System.out.println("A");
+} else if (mark >= 75) {
+System.out.println("B");
+} else {
+System.out.println("C");
+}
+
+SWITCH:
+
+switch (choice) {
+case 1:
+System.out.println("Add");
+break;
+case 2:
+System.out.println("Subtract");
+break;
+default:
+System.out.println("Invalid choice");
+}
+
+FOR LOOP:
+
+for (int i = 1; i <= 5; i++) {
+System.out.println(i);
+}
+
+WHILE LOOP:
+
+int i = 1;
+
+while (i <= 5) {
+System.out.println(i);
+i++;
+}
+
+DO-WHILE LOOP:
+
+int i = 1;
+
+do {
+System.out.println(i);
+i++;
+} while (i <= 5);
+
+ARRAY:
+
+int[] numbers = {10, 20, 30, 40};
+
+System.out.println(numbers[0]);
+
+ARRAY LOOP:
+
+for (int i = 0; i < numbers.length; i++) {
+System.out.println(numbers[i]);
+}
+
+METHOD:
+
+void display() {
+System.out.println("Hello");
+}
+
+METHOD WITH PARAMETERS:
+
+void add(int a, int b) {
+System.out.println(a + b);
+}
+
+METHOD WITH RETURN VALUE:
+
+int add(int a, int b) {
+return a + b;
+}
+
+METHOD OVERLOADING:
+
+Method overloading means having multiple methods with the same name but different parameters.
+
+int add(int a, int b) {
+return a + b;
+}
+
+double add(double a, double b) {
+return a + b;
+}
+
+CLASS:
+
+class Student {
+String name;
+int rollNo;
+
+```
+void display() {
+    System.out.println(name);
+    System.out.println(rollNo);
+}
+```
+
+}
+
+OBJECT:
+
+Student s1 = new Student();
+
+s1.name = "Arun";
+s1.rollNo = 101;
+
+s1.display();
+
+CONSTRUCTOR:
+
+A constructor is a special method used to initialize an object.
+
+class Student {
+String name;
+int rollNo;
+
+```
+Student(String n, int r) {
+    name = n;
+    rollNo = r;
+}
+```
+
+}
+
+Object creation:
+
+Student s1 = new Student("Arun", 101);
+
+DEFAULT CONSTRUCTOR:
+
+class Student {
+
+```
+Student() {
+    System.out.println("Constructor called");
+}
+```
+
+}
+
+PARAMETERIZED CONSTRUCTOR:
+
+class Student {
+
+```
+Student(String name, int rollNo) {
+    System.out.println(name);
+    System.out.println(rollNo);
+}
+```
+
+}
+
+THIS KEYWORD:
+
+The this keyword refers to the current object.
+
+class Student {
+String name;
+
+```
+Student(String name) {
+    this.name = name;
+}
+```
+
+}
+
+ACCESS SPECIFIERS:
+
+public:
+Accessible from anywhere.
+
+private:
+Accessible only inside the same class.
+
+protected:
+Accessible within the same package and through inheritance.
+
+default:
+Accessible within the same package.
+
+ENCAPSULATION:
+
+Encapsulation means wrapping data and methods into a single class and controlling access to data.
+
+Example:
+
+class Student {
+private int marks;
+
+```
+public void setMarks(int marks) {
+    this.marks = marks;
+}
+
+public int getMarks() {
+    return marks;
+}
+```
+
+}
+
+GETTER AND SETTER:
+
+Setter is used to assign a value.
+
+public void setName(String name) {
+this.name = name;
+}
+
+Getter is used to return a value.
+
+public String getName() {
+return name;
+}
+
+STATIC VARIABLE:
+
+A static variable belongs to the class rather than individual objects.
+
+class Student {
+static int count = 0;
+}
+
+STATIC METHOD:
+
+static void display() {
+System.out.println("Static method");
+}
+
+INHERITANCE:
+
+Inheritance allows one class to acquire properties and methods of another class.
+
+Syntax:
+
+class Child extends Parent {
+}
+
+Example:
+
+class Animal {
+void eat() {
+System.out.println("Eating");
+}
+}
+
+class Dog extends Animal {
+void bark() {
+System.out.println("Barking");
+}
+}
+
+MULTILEVEL INHERITANCE:
+
+class Animal {
+}
+
+class Dog extends Animal {
+}
+
+class Puppy extends Dog {
+}
+
+HIERARCHICAL INHERITANCE:
+
+class Animal {
+}
+
+class Dog extends Animal {
+}
+
+class Cat extends Animal {
+}
+
+SUPER KEYWORD:
+
+The super keyword refers to the parent class.
+
+class Animal {
+String name = "Animal";
+}
+
+class Dog extends Animal {
+String name = "Dog";
+
+```
+void display() {
+    System.out.println(super.name);
+}
+```
+
+}
+
+METHOD OVERRIDING:
+
+Method overriding occurs when a child class provides its own implementation of a parent class method.
+
+class Animal {
+void sound() {
+System.out.println("Animal sound");
+}
+}
+
+class Dog extends Animal {
+@Override
+void sound() {
+System.out.println("Dog barks");
+}
+}
+
+ABSTRACT CLASS:
+
+An abstract class is a class declared using the abstract keyword.
+
+abstract class Animal {
+
+```
+abstract void sound();
+
+void eat() {
+    System.out.println("Eating");
+}
+```
+
+}
+
+ABSTRACT METHOD:
+
+An abstract method has no body.
+
+abstract void sound();
+
+A subclass must implement the abstract method.
+
+class Dog extends Animal {
+
+```
+void sound() {
+    System.out.println("Dog barks");
+}
+```
+
+}
+
+FINAL KEYWORD:
+
+Final variable:
+
+final int MAX = 100;
+
+A final variable cannot be changed.
+
+Final method:
+
+final void display() {
+System.out.println("Hello");
+}
+
+A final method cannot be overridden.
+
+Final class:
+
+final class Student {
+}
+
+A final class cannot be inherited.
+
+INTERFACE:
+
+An interface is used to achieve abstraction and support multiple inheritance through interfaces.
+
+interface Animal {
+void sound();
+}
+
+class Dog implements Animal {
+
+```
+public void sound() {
+    System.out.println("Dog barks");
+}
+```
+
+}
+
+MULTIPLE INTERFACES:
+
+interface A {
+void displayA();
+}
+
+interface B {
+void displayB();
+}
+
+class C implements A, B {
+
+```
+public void displayA() {
+    System.out.println("A");
+}
+
+public void displayB() {
+    System.out.println("B");
+}
+```
+
+}
+
+PACKAGE:
+
+A package is used to group related classes and interfaces.
+
+package student;
+
+public class Student {
+public void display() {
+System.out.println("Student");
+}
+}
+
+IMPORT PACKAGE:
+
+import student.Student;
+
+EXCEPTION:
+
+An exception is an unwanted event that interrupts normal program execution.
+
+TRY-CATCH:
+
+try {
+int result = 10 / 0;
+} catch (ArithmeticException e) {
+System.out.println("Cannot divide by zero");
+}
+
+FINALLY:
+
+finally is generally used for code that should execute after try/catch.
+
+try {
+System.out.println("Try block");
+} catch (Exception e) {
+System.out.println("Exception");
+} finally {
+System.out.println("Finally block");
+}
+
+THROW:
+
+throw is used to explicitly throw an exception.
+
+throw new ArithmeticException("Invalid operation");
+
+THROWS:
+
+throws declares that a method may throw an exception.
+
+void test() throws Exception {
+// code
+}
+
+USER-DEFINED EXCEPTION:
+
+class MyException extends Exception {
+
+```
+MyException(String message) {
+    super(message);
+}
+```
+
+}
+
+THREAD:
+
+A thread is a lightweight unit of execution.
+
+CREATING THREAD USING THREAD CLASS:
+
+class MyThread extends Thread {
+
+```
+public void run() {
+    System.out.println("Thread is running");
+}
+```
+
+}
+
+public class Main {
+public static void main(String[] args) {
+
+```
+    MyThread t = new MyThread();
+    t.start();
+}
+```
+
+}
+
+CREATING THREAD USING RUNNABLE:
+
+class MyTask implements Runnable {
+
+```
+public void run() {
+    System.out.println("Thread is running");
+}
+```
+
+}
+
+public class Main {
+public static void main(String[] args) {
+
+```
+    MyTask task = new MyTask();
+    Thread t = new Thread(task);
+
+    t.start();
+}
+```
+
+}
+
+SYNCHRONIZATION:
+
+Synchronization is used to control access to shared resources when multiple threads are running.
+
+synchronized void display() {
+System.out.println("Synchronized method");
+}
+
+WAIT:
+
+wait() causes the current thread to wait until another thread sends a notification.
+
+NOTIFY:
+
+notify() wakes up one waiting thread.
+
+NOTIFYALL:
+
+notifyAll() wakes up all waiting threads.
+
+JOIN:
+
+join() makes one thread wait until another thread finishes.
+
+t1.join();
+
+NESTED CLASS:
+
+A class declared inside another class is called a nested class.
+
+class Outer {
+
+```
+class Inner {
+
+    void display() {
+        System.out.println("Inner class");
+    }
+}
+```
+
+}
+
+STATIC INNER CLASS:
+
+class Outer {
+
+```
+static class Inner {
+
+    void display() {
+        System.out.println("Static inner class");
+    }
+}
+```
+
+}
+
+ANONYMOUS INNER CLASS:
+
+An anonymous inner class is a class without a name that is created and used immediately.
+
+interface Greeting {
+void message();
+}
+
+Greeting g = new Greeting() {
+
+```
+public void message() {
+    System.out.println("Hello");
+}
+```
+
+};
+
+OBJECT-ORIENTED PROGRAMMING PRINCIPLES:
+
+The four main OOP principles are:
+
+1. Encapsulation
+2. Inheritance
+3. Polymorphism
+4. Abstraction
+
+ENCAPSULATION:
+Wrapping data and methods together inside a class.
+
+INHERITANCE:
+Acquiring properties and methods from another class.
+
+POLYMORPHISM:
+One name having multiple forms.
+
+ABSTRACTION:
+Hiding implementation details and showing only essential features.
+
+COMMON JAVA ERRORS:
+
+Missing semicolon:
+Every Java statement generally ends with a semicolon.
+
+Missing main method:
+A Java program that is executed directly normally requires:
+
+public static void main(String[] args)
+
+Class name mismatch:
+If a class is declared public, the filename should normally match the public class name.
+
+COMMON CHATBOT QUESTIONS:
+
+Question: What is Java?
+Answer: Java is a high-level, object-oriented, class-based programming language.
+
+Question: What is a class?
+Answer: A class is a blueprint or template used to create objects.
+
+Question: What is an object?
+Answer: An object is an instance of a class.
+
+Question: What is a constructor?
+Answer: A constructor is used to initialize objects.
+
+Question: What is inheritance?
+Answer: Inheritance allows a child class to acquire properties and methods from a parent class.
+
+Question: What is method overloading?
+Answer: Method overloading means having methods with the same name but different parameter lists.
+
+Question: What is method overriding?
+Answer: Method overriding occurs when a child class provides a new implementation of a parent class method.
+
+Question: What is an abstract class?
+Answer: An abstract class is a class that can contain abstract and non-abstract methods.
+
+Question: What is an interface?
+Answer: An interface defines a contract that implementing classes must follow.
+
+Question: What is encapsulation?
+Answer: Encapsulation means combining data and methods in a class and controlling access to the data.
+
+Question: What is a static variable?
+Answer: A static variable belongs to the class and is shared among objects of that class.
+
+Question: What is an exception?
+Answer: An exception is an event that disrupts the normal flow of program execution.
+
+Question: What is a thread?
+Answer: A thread is a lightweight unit of execution within a program.
+
+CHATBOT RULES:
+
+The chatbot should explain Java concepts in simple language.
+
+The chatbot should provide Java syntax when the user asks for syntax.
+
+The chatbot should provide short code examples when the user asks for examples.
+
+The chatbot should explain code step by step when requested.
+
+The chatbot should not invent Java syntax.
+
+The chatbot should clearly mention when code requires imports.
+
+The chatbot should not claim that code is correct without checking its syntax and logic.
+
+If the requested Java topic is not available in this knowledge base, the chatbot should say that the topic is not available in its current knowledge base.
