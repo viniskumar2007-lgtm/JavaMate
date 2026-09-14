@@ -159,7 +159,7 @@ def retrieve_knowledge(question):
     # STOP WORDS
     # -----------------------------------------------------
 
-    stop_words = {
+     stop_words = {
         "what",
         "is",
         "are",
