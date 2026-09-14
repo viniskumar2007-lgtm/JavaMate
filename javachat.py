@@ -95,7 +95,15 @@ sections = load_kb()
 # ---------------- RETRIEVAL ----------------
 
 def retrieve_knowledge(question):
+    question_lower = question.lower()
 
+    # Static keyword / static method questions
+    if "static" in question_lower:
+        for section in sections:
+            heading = section.split("\n")[0].strip().lower()
+
+            if "static method" in heading or "static or class method" in heading:
+                return section[:6000]
     stop_words = {
     "what", "is", "are", "the", "a", "an", "in", "of",
     "to", "for", "and", "or", "how", "why", "can", "do",
