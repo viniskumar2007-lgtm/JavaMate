@@ -553,10 +553,10 @@ if user_question:
 # SAVE USER QUESTION
 # -----------------------------------------------------
 
-st.session_state.messages.append({
-    "role": "user",
-    "content": user_question
-})
+    st.session_state.messages.append({
+        "role": "user",
+        "content": user_question
+    })
 
 
 with st.chat_message(
