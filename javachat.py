@@ -454,7 +454,7 @@ return (
     + knowledge
 )
 #=========================================================
-GEMINI CLIENT
+
 #=========================================================
 
 client = genai.Client(
@@ -462,7 +462,7 @@ api_key=st.secrets["key"]
 )
 
 #=========================================================
-SIDEBAR
+
 #=========================================================
 
 with st.sidebar:
@@ -515,7 +515,7 @@ if st.button(
 
     st.rerun()
 #=========================================================
-CHAT HISTORY
+#CHAT HISTORY
 #=========================================================
 
 if "messages" not in st.session_state:
@@ -540,7 +540,7 @@ with st.chat_message(
         message["content"]
     )
 #=========================================================
-USER INPUT
+#USER INPUT
 #=========================================================
 
 user_question = st.chat_input(
@@ -702,7 +702,7 @@ Give a clear, student-friendly answer.
 
 st.markdown(bot_reply)
 #-----------------------------------------------------
-SAVE BOT RESPONSE
+#SAVE BOT RESPONSE
 #-----------------------------------------------------
 
 st.session_state.messages.append({
