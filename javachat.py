@@ -278,7 +278,7 @@ def fallback_answer(knowledge, question):
 
     question_lower = question.lower()
 
-    # Difference between overloading and overriding
+    # Difference / comparison
     if (
         "difference" in question_lower
         or "compare" in question_lower
@@ -293,38 +293,77 @@ def fallback_answer(knowledge, question):
 
             return (
                 "### Method Overloading vs Method Overriding\n\n"
+
                 "| Method Overloading | Method Overriding |\n"
                 "|---|---|\n"
-                "| Same method name with different parameters. | Child class provides its own implementation of a parent method. |\n\n"
+                "| Same method name with different parameters. | "
+                "Child class provides its own implementation of "
+                "a parent class method. |\n\n"
+
                 "### Method Overloading Example\n\n"
+
                 "```java\n"
                 "int add(int a, int b) {\n"
                 "    return a + b;\n"
                 "}\n\n"
+
                 "double add(double a, double b) {\n"
                 "    return a + b;\n"
                 "}\n"
                 "```\n\n"
+
                 "### Method Overriding Example\n\n"
+
                 "```java\n"
                 "class Animal {\n"
                 "    void sound() {\n"
                 '        System.out.println("Animal sound");\n'
                 "    }\n"
                 "}\n\n"
+
                 "class Dog extends Animal {\n"
                 "    @Override\n"
                 "    void sound() {\n"
                 '        System.out.println("Dog barks");\n'
                 "    }\n"
                 "}\n"
-                "```\n\n"
-                "This answer is based on my Java knowledge base."
+                "```\n"
             )
 
-    # Normal fallback
+    # Simple explanation questions
+    if "explain" in question_lower:
+
+        return (
+            "### Simple Explanation\n\n"
+            + knowledge
+            + "\n\n"
+            "This explanation is based on the JavaMate "
+            "knowledge base."
+        )
+
+    # Example questions
+    if "example" in question_lower:
+
+        return (
+            "### Example\n\n"
+            + knowledge
+        )
+
+    # Program / code questions
+    if (
+        "program" in question_lower
+        or "code" in question_lower
+        or "syntax" in question_lower
+    ):
+
+        return (
+            "### Java Answer\n\n"
+            + knowledge
+        )
+
+    # Normal questions
     return (
-        "### JavaMate Knowledge Base Answer\n\n"
+        "### JavaMate Answer\n\n"
         + knowledge
     )
 
