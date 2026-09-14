@@ -411,10 +411,10 @@ class Dog extends Animal {
         or "syntax" in question_lower
     ):
 
-return (
-        "### Java Program / Syntax\n\n"
-        + knowledge
-    )
+        return (
+            "### Java Program / Syntax\n\n"
+            + knowledge
+        )
 
 
 # -----------------------------------------------------
