@@ -671,14 +671,12 @@ Give a clear, student-friendly answer.
 
         error = str(e)
 
-
         if "429" in error:
 
             bot_reply = fallback_answer(
                 relevant_knowledge,
                 user_question
             )
-
 
         elif "503" in error:
 
@@ -687,7 +685,6 @@ Give a clear, student-friendly answer.
                 user_question
             )
 
-
         else:
 
             bot_reply = fallback_answer(
@@ -695,17 +692,8 @@ Give a clear, student-friendly answer.
                 user_question
             )
 
-
 # -----------------------------------------------------
-# DISPLAY RESPONSE
+# DISPLAY BOT RESPONSE
 # -----------------------------------------------------
 
 st.markdown(bot_reply)
-#-----------------------------------------------------
-#SAVE BOT RESPONSE
-#-----------------------------------------------------
-
-st.session_state.messages.append({
-"role": "assistant",
-"content": bot_reply
-})
