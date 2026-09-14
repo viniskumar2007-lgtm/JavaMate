@@ -261,7 +261,8 @@ def fallback_answer(knowledge, question):
 
 ### Simple Example
 
-**Overloading:**
+**Method Overloading:**
+
 ```java
 int add(int a, int b) {
     return a + b;
