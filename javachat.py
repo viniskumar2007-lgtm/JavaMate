@@ -96,80 +96,9 @@ sections = load_kb()
 
 def retrieve_knowledge(question):
 
-    question = question.lower()
-
-    keywords = {
-        "inheritance": [
-            "inheritance",
-            "extends",
-            "parent class",
-            "child class"
-        ],
-
-        "overloading": [
-            "overloading",
-            "overload"
-        ],
-
-        "overriding": [
-            "overriding",
-            "override"
-        ],
-
-        "constructor": [
-            "constructor",
-            "constructors"
-        ],
-
-        "interface": [
-            "interface",
-            "interfaces"
-        ],
-
-        "abstract": [
-            "abstract",
-            "abstract class"
-        ],
-
-        "exception": [
-            "exception",
-            "exception handling",
-            "try",
-            "catch"
-        ],
-
-        "thread": [
-            "thread",
-            "threads"
-        ],
-
-        "synchronization": [
-            "synchronization",
-            "synchronized"
-        ],
-
-        "static": [
-            "static",
-            "static variable",
-            "static method"
-        ],
-
-        "encapsulation": [
-            "encapsulation",
-            "getter",
-            "setter"
-        ]
-    }
-
-    matched_topics = []
-
-    for topic, words in keywords.items():
-
-        for word in words:
-
-            if word in question:
-                matched_topics.append(topic)
-                break
+    question_words = set(
+        re.findall(r'\b[a-zA-Z][a-zA-Z0-9]*\b', question.lower())
+    )
 
     scored_sections = []
 
@@ -177,53 +106,49 @@ def retrieve_knowledge(question):
 
         section_lower = section.lower()
 
-        heading = (
-            section.split("\n")[0]
-            .strip()
-            .lower()
+        section_words = set(
+            re.findall(
+                r'\b[a-zA-Z][a-zA-Z0-9]*\b',
+                section_lower
+            )
         )
 
-        score = 0
+        # Count matching words between question and section
+        matches = question_words.intersection(section_words)
 
-        # Exact topic in heading gets highest priority
-        for topic in matched_topics:
+        score = len(matches)
 
-            if topic in heading:
-                score += 100
+        # Give extra importance to the section heading
+        heading = section.split("\n")[0].strip().lower()
 
-        # Topic appears inside section
-        for topic in matched_topics:
+        heading_words = set(
+            re.findall(
+                r'\b[a-zA-Z][a-zA-Z0-9]*\b',
+                heading
+            )
+        )
 
-            if topic in section_lower:
-                score += 5
+        heading_matches = question_words.intersection(heading_words)
+
+        score += len(heading_matches) * 10
 
         if score > 0:
+            scored_sections.append((score, section))
 
-            scored_sections.append(
-                (score, section)
-            )
-
-    # Highest score first
+    # Highest relevance first
     scored_sections.sort(
         key=lambda x: x[0],
         reverse=True
     )
 
-    # Multiple topics → retrieve multiple sections
-    if len(matched_topics) >= 2:
-
-        top_sections = scored_sections[:2]
-
-    else:
-
-        top_sections = scored_sections[:1]
+    # Take the best 2 relevant sections
+    top_sections = scored_sections[:2]
 
     knowledge = "\n\n".join(
-        section
-        for score, section in top_sections
+        section for score, section in top_sections
     )
 
-    # Prevent unnecessarily large prompts
+    # Keep Gemini input small
     return knowledge[:6000]
 
 
