@@ -465,15 +465,16 @@ in my Java knowledge base."
 
                 elif "503" in error:
 
-                    bot_reply = (
-                        "Gemini AI is temporarily busy.\n\n"
-                        "Please try again in a few moments."
+                    bot_reply = fallback_answer(
+                        relevant_knowledge,
+                        user_question
                     )
 
                 else:
 
-                    bot_reply = (
-                        "Sorry, something went wrong."
+                    bot_reply = fallback_answer(
+                    relevant_knowledge,
+                    user_question
                     )
 
         st.markdown(bot_reply)
