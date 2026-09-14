@@ -520,15 +520,15 @@ with st.sidebar:
 
 if "messages" not in st.session_state:
 
-st.session_state.messages = []
+    st.session_state.messages = []
 
 for message in st.session_state.messages:
 
-avatar = (
-    "🧑‍💻"
-    if message["role"] == "user"
-    else "☕"
-)
+    avatar = (
+        "🧑‍💻"
+        if message["role"] == "user"
+        else "☕"
+    )
 
 
 with st.chat_message(
